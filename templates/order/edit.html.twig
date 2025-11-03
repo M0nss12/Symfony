@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактировать заказ #{{ order.id }} - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('app_order_index') }}">Заказы</a></li>
+    <li class="breadcrumb-item active">Редактирование</li>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-group">
+        <a href="{{ path('app_order_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Назад к списку
+        </a>
+        <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-info">
+            <i class="fas fa-eye me-1"></i>Просмотреть
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактировать заказ #{{ order.id }}
+                </h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.customer) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.camera) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(form.quantity) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.status) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.payment_method) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.order_date) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.tracking_number) }}
+                        </div>
+                    </div>
+                    
+                    {{ form_row(form.shipping_address) }}
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить изменения
+                        </button>
+                        <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Отмена
+                        </a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

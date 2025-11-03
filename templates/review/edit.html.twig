@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактировать отзыв - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('app_review_index') }}">Отзывы</a></li>
+    <li class="breadcrumb-item active">Редактирование</li>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-group">
+        <a href="{{ path('app_review_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Назад к списку
+        </a>
+        <a href="{{ path('app_review_show', {'id': review.id}) }}" class="btn btn-info">
+            <i class="fas fa-eye me-1"></i>Просмотреть
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактировать отзыв
+                </h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.customer) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.camera) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.rating) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.title) }}
+                        </div>
+                    </div>
+                    
+                    {{ form_row(form.comment) }}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.image_quality_rating) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.ease_of_use_rating) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.review_date) }}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch mt-4">
+                                {{ form_widget(form.is_verified_purchase) }}
+                                {{ form_label(form.is_verified_purchase) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Сохранить изменения
+                        </button>
+                        <a href="{{ path('app_review_show', {'id': review.id}) }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Отмена
+                        </a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ camera.brand }} {{ camera.model }} - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('app_camera_index') }}">Фотоаппараты</a></li>
+    <li class="breadcrumb-item active">Просмотр</li>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-group">
+        <a href="{{ path('app_camera_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Назад к списку
+        </a>
+        <a href="{{ path('app_camera_edit', {'id': camera.id}) }}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i>Редактировать
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Информация о фотоаппарате</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="200">Бренд</th>
+                            <td>{{ camera.brand }}</td>
+                        </tr>
+                        <tr>
+                            <th>Модель</th>
+                            <td>{{ camera.model }}</td>
+                        </tr>
+                        <tr>
+                            <th>Цена</th>
+                            <td><span class="h5 text-primary">{{ camera.price }} €</span></td>
+                        </tr>
+                        <tr>
+                            <th>Мегапиксели</th>
+                            <td>{{ camera.megapixels }} MP</td>
+                        </tr>
+                        <tr>
+                            <th>Тип сенсора</th>
+                            <td>
+                                <span class="badge bg-secondary">{{ camera.sensorType }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Wi-Fi</th>
+                            <td>
+                                {% if camera.wifi %}
+                                    <span class="badge bg-success">Да</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Нет</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Bluetooth</th>
+                            <td>
+                                {% if camera.bluetooth %}
+                                    <span class="badge bg-success">Да</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Нет</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Количество на складе</th>
+                            <td>
+                                <span class="badge bg-{{ camera.stockQuantity > 0 ? 'success' : 'danger' }} fs-6">
+                                    {{ camera.stockQuantity }} шт.
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Дата создания</th>
+                            <td>{{ camera.createdAt|date('d.m.Y H:i') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Описание</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ camera.description }}</p>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Действия</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ path('app_camera_edit', {'id': camera.id}) }}" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i>Редактировать
+                    </a>
+                    <form method="post" 
+                          action="{{ path('app_camera_delete', {'id': camera.id}) }}" 
+                          onsubmit="return confirm('Вы уверены, что хотите удалить этот фотоаппарат?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                        <button class="btn btn-danger w-100">
+                            <i class="fas fa-trash me-2"></i>Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

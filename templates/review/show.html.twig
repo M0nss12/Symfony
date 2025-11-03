@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Отзыв от {{ review.customer.firstName }} - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('app_review_index') }}">Отзывы</a></li>
+    <li class="breadcrumb-item active">Просмотр</li>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-group">
+        <a href="{{ path('app_review_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Назад к списку
+        </a>
+        <a href="{{ path('app_review_edit', {'id': review.id}) }}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i>Редактировать
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Информация об отзыве</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="200">Клиент</th>
+                            <td>
+                                <strong>{{ review.customer.firstName }} {{ review.customer.lastName }}</strong>
+                                <br>
+                                <small class="text-muted">{{ review.customer.email }}</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Фотоаппарат</th>
+                            <td>
+                                <strong>{{ review.camera.brand }} {{ review.camera.model }}</strong>
+                                <br>
+                                <small class="text-muted">{{ review.camera.price }} €</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Общий рейтинг</th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-warning me-2 fs-5">
+                                        {% for i in 1..5 %}
+                                            {% if i <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-primary fs-6">{{ review.rating }}/5</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Заголовок</th>
+                            <td><strong>{{ review.title }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Комментарий</th>
+                            <td>
+                                <p class="mb-0">{{ review.comment }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Качество изображения</th>
+                            <td>
+                                {% if review.imageQualityRating %}
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-warning me-2">
+                                            {% for i in 1..5 %}
+                                                {% if i <= review.imageQualityRating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <span class="badge bg-info">{{ review.imageQualityRating }}/5</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Не оценено</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Удобство использования</th>
+                            <td>
+                                {% if review.easeOfUseRating %}
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-warning me-2">
+                                            {% for i in 1..5 %}
+                                                {% if i <= review.easeOfUseRating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <span class="badge bg-info">{{ review.easeOfUseRating }}/5</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Не оценено</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Подтвержденная покупка</th>
+                            <td>
+                                {% if review.isVerifiedPurchase %}
+                                    <span class="badge bg-success">Да</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Нет</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Дата отзыва</th>
+                            <td>{{ review.reviewDate|date('d.m.Y H:i') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата создания</th>
+                            <td>{{ review.createdAt|date('d.m.Y H:i') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Действия</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ path('app_review_edit', {'id': review.id}) }}" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i>Редактировать
+                    </a>
+                    <form method="post" 
+                          action="{{ path('app_review_delete', {'id': review.id}) }}" 
+                          onsubmit="return confirm('Вы уверены, что хотите удалить этот отзыв?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
+                        <button class="btn btn-danger w-100">
+                            <i class="fas fa-trash me-2"></i>Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Информация о фотоаппарате</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>{{ review.camera.brand }} {{ review.camera.model }}</strong></p>
+                <p class="mb-1 text-muted small">{{ review.camera.megapixels }}MP • {{ review.camera.sensorType }}</p>
+                <p class="mb-1 text-muted small">{{ review.camera.price }} €</p>
+                <p class="mb-0">
+                    {% if review.camera.wifi %}<i class="fas fa-wifi me-1" title="Wi-Fi"></i>{% endif %}
+                    {% if review.camera.bluetooth %}<i class="fas fa-bluetooth me-1" title="Bluetooth"></i>{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

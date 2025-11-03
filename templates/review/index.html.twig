@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Отзывы - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Отзывы</li>
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{{ path('app_review_new') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Добавить отзыв
+    </a>
+{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Список отзывов</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Клиент</th>
+                        <th>Фотоаппарат</th>
+                        <th>Рейтинг</th>
+                        <th>Заголовок</th>
+                        <th>Дата отзыва</th>
+                        <th>Подтвержденная покупка</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for review in pagination %}
+                    <tr>
+                        <td>
+                            <strong>{{ review.customer.firstName }} {{ review.customer.lastName }}</strong>
+                            <br>
+                            <small class="text-muted">{{ review.customer.email }}</small>
+                        </td>
+                        <td>
+                            {{ review.camera.brand }} {{ review.camera.model }}
+                            <br>
+                            <small class="text-muted">{{ review.camera.price }} €</small>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="text-warning me-1">
+                                    {% for i in 1..5 %}
+                                        {% if i <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                                <span class="badge bg-primary ms-1">{{ review.rating }}/5</span>
+                            </div>
+                        </td>
+                        <td>
+                            <strong>{{ review.title }}</strong>
+                            <br>
+                            <small class="text-muted">{{ review.comment|slice(0, 50) }}...</small>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ review.reviewDate|date('d.m.Y') }}</small>
+                        </td>
+                        <td>
+                            {% if review.isVerifiedPurchase %}
+                                <span class="badge bg-success">Да</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Нет</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ path('app_review_show', {'id': review.id}) }}" 
+                                   class="btn btn-info" 
+                                   title="Просмотреть">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ path('app_review_edit', {'id': review.id}) }}" 
+                                   class="btn btn-warning" 
+                                   title="Редактировать">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" 
+                                      action="{{ path('app_review_delete', {'id': review.id}) }}" 
+                                      onsubmit="return confirm('Вы уверены, что хотите удалить этот отзыв?');"
+                                      style="display: inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
+                                    <button class="btn btn-danger" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Нет оставленных отзывов</p>
+                            <a href="{{ path('app_review_new') }}" class="btn btn-primary">
+                                Добавить первый отзыв
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Пагинация -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-muted">
+                Показано {{ pagination|length }} из {{ pagination.getTotalItemCount }} записей
+            </div>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

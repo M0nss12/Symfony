@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ customer.firstName }} {{ customer.lastName }} - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('app_customer_index') }}">Клиенты</a></li>
+    <li class="breadcrumb-item active">Просмотр</li>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-group">
+        <a href="{{ path('app_customer_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Назад к списку
+        </a>
+        <a href="{{ path('app_customer_edit', {'id': customer.id}) }}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i>Редактировать
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Информация о клиенте</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="200">Имя</th>
+                            <td>{{ customer.firstName }}</td>
+                        </tr>
+                        <tr>
+                            <th>Фамилия</th>
+                            <td>{{ customer.lastName }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ customer.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Телефон</th>
+                            <td>{{ customer.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Адрес</th>
+                            <td>{{ customer.address }}</td>
+                        </tr>
+                        <tr>
+                            <th>Город</th>
+                            <td>{{ customer.city }}</td>
+                        </tr>
+                        <tr>
+                            <th>Почтовый индекс</th>
+                            <td>{{ customer.zipCode }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата регистрации</th>
+                            <td>{{ customer.registrationDate|date('d.m.Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Статус</th>
+                            <td>
+                                {% if customer.isActive %}
+                                    <span class="badge bg-success">Активен</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Неактивен</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Дата создания</th>
+                            <td>{{ customer.createdAt|date('d.m.Y H:i') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Действия</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ path('app_customer_edit', {'id': customer.id}) }}" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i>Редактировать
+                    </a>
+                    <form method="post" 
+                          action="{{ path('app_customer_delete', {'id': customer.id}) }}" 
+                          onsubmit="return confirm('Вы уверены, что хотите удалить этого клиента?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ customer.id) }}">
+                        <button class="btn btn-danger w-100">
+                            <i class="fas fa-trash me-2"></i>Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

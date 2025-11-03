@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Главная - Магазин фотоаппаратов{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Главная</li>
+{% endblock %}
+
+{% block page_title %}Добро пожаловать в магазин фотоаппаратов{% endblock %}
+
+{% block body %}
+<!-- Статистика -->
+<div class="row mb-5">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card border-left-primary h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Фотоаппараты
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cameras_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-camera fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card border-left-success h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Клиенты
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ customers_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card border-left-warning h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Заказы
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ orders_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card border-left-info h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Отзывы
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ reviews_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-star fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Быстрые действия -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-bolt me-2"></i>Быстрые действия</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ path('app_camera_new') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-2"></i>Добавить фотоаппарат
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ path('app_customer_new') }}" class="btn btn-success w-100">
+                            <i class="fas fa-user-plus me-2"></i>Добавить клиента
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ path('app_order_new') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-cart-plus me-2"></i>Создать заказ
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ path('app_review_new') }}" class="btn btn-info w-100">
+                            <i class="fas fa-comment me-2"></i>Добавить отзыв
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Последние фотоаппараты -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="fas fa-clock me-2"></i>Последние фотоаппараты</h5>
+                <a href="{{ path('app_camera_index') }}" class="btn btn-sm btn-outline-primary">
+                    Все фотоаппараты
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for camera in recent_cameras %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ camera.brand }} {{ camera.model }}</h6>
+                                <p class="card-text text-muted small mb-2">
+                                    {{ camera.megapixels }}MP • {{ camera.sensorType }}
+                                    {% if camera.wifi %}<i class="fas fa-wifi ms-2" title="Wi-Fi"></i>{% endif %}
+                                    {% if camera.bluetooth %}<i class="fas fa-bluetooth ms-1" title="Bluetooth"></i>{% endif %}
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h5 mb-0 text-primary">{{ camera.price }} €</span>
+                                    <span class="badge bg-{{ camera.stockQuantity > 0 ? 'success' : 'danger' }}">
+                                        {{ camera.stockQuantity }} в наличии
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ path('app_camera_show', {'id': camera.id}) }}" class="btn btn-sm btn-outline-primary w-100">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-12">
+                        <p class="text-center text-muted">Нет доступных фотоаппаратов</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
